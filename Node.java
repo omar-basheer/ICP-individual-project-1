@@ -3,16 +3,17 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
+/**
+ * @author Omar Basheer
+ *
+ */
 public class Node {
 
     /**
      * Instance variables
      */
-
-    static String Airport_state;   // current airport IATA code
-    static String Airport_parent;  // parent airport IATA code
-    Airport tempState = Airport.objectInit(Airport_state);  // airport object associated with Airport_state.
-    Airport tempParent = Airport.objectInit(Airport_parent); // airport object associated with Airport_parent.
+    private static String Airport_state;   // current airport IATA code
+    private static Node Airport_parent;  // parent airport IATA code
 
 
     /**
@@ -22,26 +23,36 @@ public class Node {
      * @param Airport_parent the IATA of an airport's parent
 
      */
-    public Node(String Airport_state, String Airport_parent) {
+    public Node(String Airport_state, Node Airport_parent) {
         this.Airport_state = Airport_state;
         this.Airport_parent = Airport_parent;
-//        this.successor = successor;
     }
 
-    public static String getAirport_state() {
+
+    /**
+     * All getters and setters in the class
+     */
+    public  String getAirport_state() {
         return Airport_state;
     }
 
-    public static String getAirport_parent() {
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof Node)) return false;
+//        Node node = (Node) o;
+//        return getAirport_state() == node.getAirport_state();
+//    }
+
+    public  Node getAirport_parent() {
         return Airport_parent;
     }
 
     @Override
     public String toString(){
-        String string = "nodeState: " + this.tempState.AirportName;
-        if(this.tempParent != null){
-            string = string + ", parent: " + this.tempParent.AirportName;
-        }
+        String string = "nodeState: " + Airport_state;
+//        if(Airport_parent != null){
+//            string = string + ", parent: " + Airport_parent;
+//        }
         return string;
     }
 
@@ -49,18 +60,15 @@ public class Node {
      * @return ArrayList
      * This method returns a list of all nodes in solution path
      */
-    public static ArrayList<String> solutionPath(){
+    public ArrayList<String> solutionPath(){
+
         ArrayList<String> solution_path = new ArrayList<>();
+        solution_path.add(this.Airport_state);
 
-        Node currentState = new Node(Airport_state, Airport_parent);
-        Airport temp = (Airport.objectInit(currentState.Airport_state));
-        System.out.println(temp);
-
-        solution_path.add(temp.getICAO_Code());
-
-        while(!(Airport.objectInit(currentState.Airport_parent) == null)){
-            solution_path.add(temp.getIATA_Code());
-            temp = Airport.objectInit(currentState.Airport_parent);
+        Node currentState = this.getAirport_parent();
+        while(!(currentState == null)){
+            solution_path.add(currentState.Airport_state);
+            currentState = currentState.Airport_parent;
         }
         Collections.reverse(solution_path);
 
@@ -68,18 +76,4 @@ public class Node {
 
     }
 
-    public static void main(String[]args){
-
-        Map RoutesMap = Route.Router.getRoutes("routes.csv");
-        System.out.println(RoutesMap.get("SCN"));
-        Map AirportsMap = Airport.AirportFileReader("airports.csv");
-        System.out.println(AirportsMap.get("LUX"));
-
-
-
-        System.out.println(Route.Router.findRoute("SCN", "LUX"));
-//            System.out.println(findRoute("BAH", "BAY"));
-//            System.out.println(findRoute("SCN", "JFK"));
-
-    }
 }

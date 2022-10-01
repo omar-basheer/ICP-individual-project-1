@@ -1,6 +1,10 @@
 import java.io.*;
 import java.util.*;
 
+/**
+ * @author Omar Basheer
+ *
+ */
 public class Route{
 
     /**
@@ -14,7 +18,6 @@ public class Route{
     String AirlineCode;
     String AirlineID;
     String Stops;
-
 
     /**
      * Constructor:
@@ -36,12 +39,18 @@ public class Route{
         this.Stops = Stops;
     }
 
+    /**
+     * toString method for Airport objects
+     * */
     @Override
     public String toString(){
         return "[Route: " + "(" + SA_Code + ", " + SA_ID + ") to " + "(" + DA_Code + ", " + DA_ID+ ");  " + "AID: " + AirlineID + ";  AC: " + AirlineCode + "; Stops:" + Stops +"]";
     }
 
 
+    /**
+     * All getters and setters for the class
+     * */
     public String getSA_Code() {
         return SA_Code;
     }
@@ -99,7 +108,7 @@ public class Route{
     }
 
     /**
-     * This map contians the list of airports IATA that can be reached from a given IATA
+     * This map contains the list of airports IATA that can be reached from a given IATA
      * The key is a source airport IATA and the value is an ArrayList of destination IATA
      */
     static HashMap<String, ArrayList<String>> routeMap = new HashMap<>();
@@ -124,17 +133,16 @@ public class Route{
                         ArrayList<String> routeList = routeMap.get(values[2]);
                         String current = values[4];
                         routeList.add(current);
-                        routeMap.put(Key, routeList);
                     }
                     else {
-                        ArrayList<String> list = new ArrayList<>();
+                        ArrayList<String> routeList = new ArrayList<>();
                         String current = values[4];
-                        //routeEdges.get(values[2]);
-                        list.add(current);
-                        routeMap.put(Key, list);
+                        routeList.add(current);
+                        routeMap.putIfAbsent(Key, routeList);
                     }
                 }
-                System.out.println(routeMap.get("PMI").size());
+                inputStream.close();
+//                System.out.println(routeMap.get("SCN").size());
 
             } catch (IOException e){
                 throw new RuntimeException(e);
@@ -148,7 +156,11 @@ public class Route{
          */
         public static ArrayList<String> findRoute(String startState, String goalState) {
 
-            Deque<String> frontier = new ArrayDeque<>();
+            System.out.println("Source airport: " + startState);
+            System.out.println("Destination airport: " + goalState);
+
+            Deque<Node> frontier = new ArrayDeque<>();
+            Node node = new Node(startState, null);
 
             // add root node
             Set<String> keys = routeMap.keySet();
@@ -156,65 +168,49 @@ public class Route{
                 if(key.equals(startState))
                     startState = key;
             }
-            frontier.addLast(startState);
-
-            // create explored set
+            frontier.addLast(node);
+            System.out.println("added parent " + node + " to frontier");
             ArrayList<String> exploredSet = new ArrayList<>();
+            System.out.println("explored set, " +  exploredSet);
 
             while(!frontier.isEmpty()){
 
-                String nodeString = frontier.removeFirst();
-                Airport.objectInit(nodeString);
-//                System.out.println(nodeString);
+                Node nodeparent = frontier.removeFirst();
+                System.out.println("popped parent, " +  nodeparent);
+                String nodeString = nodeparent.getAirport_state();
+                exploredSet.add(nodeString);
+                System.out.println("added node to explored, explored set:" +  exploredSet);
 
-                if(nodeString.equals(goalState)){
-                    System.out.println("found goal: " + nodeString);
-                    // return solution path
-                    return Node.solutionPath();
-                }
-                else{
-                    exploredSet.add(nodeString);
-                    System.out.println("expanding node..." + nodeString);
-                    System.out.println("exploredSet: " + exploredSet);
-                    System.out.println("frontier: " + frontier);
+                ArrayList<String> successors = routeMap.get(nodeString);
 
-                    ArrayList<String> successors = routeMap.get(nodeString);
-                    for(int i = 0; i < successors.size(); i++){
-//                        frontier.add(successors.get(i));
-                        for(int j = 0; j < exploredSet.size(); j++){
-                            if(!(successors.get(i).equals(exploredSet.get(j)))){
-                                frontier.add(successors.get(i));
+                if(successors != null){
+                    for(int i=0; i<successors.size(); i++){
+                        Node child = new Node(successors.get(i), nodeparent);
+//                        System.out.println("generated successors:" +  child);
+                        if(!exploredSet.contains(child.getAirport_state()) && !frontier.contains(child)){
+                            if(child.getAirport_state().equals(goalState)){
+                                System.out.println("found goal: " + child.getAirport_state());
+//                                readWrite.fileWriter("flight path.txt", child.solutionPath());
+                                return child.solutionPath();
                             }
+                            frontier.add(child);
                         }
                     }
-//                    System.out.println(frontier);
                 }
             }
-
-            return exploredSet;
-        }
-
-
-        public static void writeToFile(String file){
-            try {
-                PrintWriter outPutstream = new PrintWriter(new FileOutputStream(file));
-                outPutstream.write("Testing");
-                outPutstream.close();
-            } catch (FileNotFoundException f) {
-                System.out.println("PROBLEM OPENING FILE");
-                System.exit(0);
-            }
+            return null;
         }
 
 
         public static void main(String[]args){
 
+            Map AirportsMap = Airport.AirportFileReader("airports.csv");
             Map RoutesMap = getRoutes("routes.csv");
-            System.out.println(RoutesMap.get("SCN"));
-//            Map AirportsMap = Airport.AirportFileReader("airports.csv");
+            System.out.println(RoutesMap.get("ACC"));
 
 
-            System.out.println(findRoute("SCN", "LUX"));
+//            System.out.println(findRoute("SCL", "LUX"));
+            System.out.println(findRoute("AER", "KZN"));
 //            System.out.println(findRoute("BAH", "BAY"));
 //            System.out.println(findRoute("SCN", "JFK"));
 

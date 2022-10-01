@@ -39,15 +39,21 @@ public class Airport {
         this.AirportID = airportID;
     }
 
+    /**
+     * Default constructor for an airport object
+     * */
     public Airport(){
-        this.AirportName = getAirportName();
-        this.AirportCity = getAirportCity();
-        this.Country = getCountry();
-        this.IATA_Code = getIATA_Code();
-        this.ICAO_Code = getICAO_Code();
-        this.AirportID = getAirportID();
+        this.AirportName = "";
+        this.AirportCity = "";
+        this.Country = "";
+        this.IATA_Code = "";
+        this.ICAO_Code = "";
+        this.AirportID = "";
     }
-    // All getters for an airport
+
+    /**
+     * All getters and setters for the class
+     * */
 
     public String getAirportName() {
         return AirportName;
@@ -98,19 +104,21 @@ public class Airport {
         AirportID = airportID;
     }
 
+
+    /**
+     * toString method for Airport objects
+     * */
     @Override
-    // to string for an airport object
     public String toString(){
         return "Airport-: " + "[" + AirportName + ", " + AirportCity + ", " + Country + ", " + IATA_Code + ", " + ICAO_Code + ", " + AirportID + "]";
     }
 /**
- *
+ * HashMap that stores all airport objects. Keys are an ArrayList containing the IATA, name and country of an airport.
  */
-    //static HashMap<ArrayList<String>, Airport> airportmap = new HashMap<>();
-    static HashMap<String, Airport> airportmap = new HashMap<>();
+    static HashMap<ArrayList<String>, Airport> airportmap = new HashMap<>();
 
     /**
-     * @return  HashMap
+     * @return  HashMap.
      * This method reads the airports file into a HashMap.
      * The keys of the hashmap are the IATA for an Airport and the values are airport objects
      */
@@ -120,13 +128,12 @@ public class Airport {
             BufferedReader inputStream = new BufferedReader(new FileReader(Filename));
             String line;
             Airport airport;
-            String airportKey;
+//            String airportKey;
 
             while((line = inputStream.readLine()) != null){
                 String[]values = line.split(",");
                 if(!(values[4].equals("\\N"))){
-//                    ArrayList<String> airportKey = new ArrayList<>(Arrays.asList(values[4],values[1], values[2], values[3]));
-                    airportKey = values[4];
+                    ArrayList<String> airportKey = new ArrayList<>(Arrays.asList(values[4], values[2], values[3]));
                     airport = new Airport(values[1], values[2], values[3], values[4], values[5], values[0]);
                     airportmap.putIfAbsent(airportKey, airport);
                 }
@@ -150,27 +157,25 @@ public class Airport {
     }
 
     /**
-     * @return Airport
-     * This method gets the object in the HashMap associated with a given IATA code.
+     * @return Airport.
+     * This method returns the object in the airportMap HashMap associated with a given IATA code.
      */
     public static Airport objectInit(String key) {
-
-        Set<String> keysList = airportmap.keySet();
-        Airport temp = new Airport();
-        for (String keySet : keysList) {
-            if (keySet.equals(key)) {
-                temp = airportmap.get(key);
-                break;
+        Airport airport = new Airport();
+        Set<ArrayList<String>> keysList = airportmap.keySet();
+        for (ArrayList<String> keySet : keysList) {
+            if (keySet.get(0).equals(key)) {
+                String name = airportmap.get(keySet).AirportName;
+                String city = airportmap.get(keySet).AirportCity;
+                String country = airportmap.get(keySet).Country;
+                String iata = airportmap.get(keySet).IATA_Code;
+                String icao = airportmap.get(keySet).ICAO_Code;
+                String id = airportmap.get(keySet).ICAO_Code;
+                airport = new Airport(name, city, country, iata, icao, id);
+//                break;
             }
         }
-        return temp;
-    }
-
-    public static void main(String[]args){
-
-        Map AirportsMap = AirportFileReader("airports.csv");
-        System.out.println(objectInit("SCL"));
-
+        return airport;
     }
 
 }
