@@ -85,9 +85,10 @@ public class readWrite {
 
             ArrayList<String> flightroute = flightPath;
 
+            outPutstream.write("Flight Plan: \n");
             for(int i=0; i<flightroute.size()-1; i++){
-                Airport temp = Airport.objectInit(flightroute.get(i));
-                outPutstream.write("go from " + flightroute.get(i) + " to " + flightroute.get(i+1) + ", 0 stops (direct flight)\n");
+//                Airport temp = Airport.objectInit(flightroute.get(i));
+                outPutstream.write("> go from " + flightroute.get(i) + " to " + flightroute.get(i+1) + ", 0 stops (direct flight)\n");
             }
             outPutstream.write("Total Flights: "+ Integer.toString(flightroute.size()-1) + "\n");
             outPutstream.write("Total Stops: "+ Integer.toString(flightroute.size()-1));
@@ -98,24 +99,6 @@ public class readWrite {
             System.out.println("PROBLEM OPENING FILE");
             System.exit(0);
         }
-    }
-    public static void main(String[]args){
-
-        Map AirportsMap = Airport.AirportFileReader("airports.csv");
-        Map RoutesMap = Route.Router.getRoutes("routes.csv");
-//        fileReader("sochi_to_kazan.txt");
-        fileReader("accra_to_newyork.txt");
-//        fileReader("sochi_to_kazan.txt");
-
-
-//        System.out.println(Airport.objectInit("SCL"));
-//        System.out.println(RoutesMap.get("ACC"));
-//        System.out.println(RoutesMap.get("SPI"));   // SPI has no children
-
-//        System.out.println(findRoute("ACC", "JFK"));
-//        System.out.println(Route.Router.findRoute("SCN", "LUX"));
-//        System.out.println(Route.Router.findRoute("AER", "KZN"));
-//        System.out.println(Route.Router.findRoute("BAH", "BAY"));
     }
 
 }

@@ -201,20 +201,5 @@ public class Route{
             }
             return null;
         }
-
-
-        public static void main(String[]args){
-
-            Map AirportsMap = Airport.AirportFileReader("airports.csv");
-            Map RoutesMap = getRoutes("routes.csv");
-            System.out.println(RoutesMap.get("ACC"));
-
-
-//            System.out.println(findRoute("SCL", "LUX"));
-//            System.out.println(findRoute("AER", "KZN"));
-//            System.out.println(findRoute("BAH", "BAY"));
-//            System.out.println(findRoute("SCN", "JFK"));
-
-        }
     }
 }
