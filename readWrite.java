@@ -77,16 +77,22 @@ public class readWrite {
      * @return null.
      * This method converts the IATA codes in the solution path into the different airports each code is assoiciated with and writes the final flight path into a new file.
      */
-    public static void fileWriter(String file, ArrayList<String> flightPath){
+    public static void fileWriter( ArrayList<String> flightPath){
         try {
-            ArrayList<String> flightroute = flightPath;
-            for(int i=0; i<flightroute.size(); i++){
-                Airport temp = Airport.objectInit(flightroute.get(i));
-                System.out.println(temp);
-            }
 
+            String file = "flight plan.txt";
             PrintWriter outPutstream = new PrintWriter(new FileOutputStream(file));
-            outPutstream.write("Testing");
+
+            ArrayList<String> flightroute = flightPath;
+
+            for(int i=0; i<flightroute.size()-1; i++){
+                Airport temp = Airport.objectInit(flightroute.get(i));
+                outPutstream.write("go from " + flightroute.get(i) + " to " + flightroute.get(i+1) + ", 0 stops (direct flight)\n");
+            }
+            outPutstream.write("Total Flights: "+ Integer.toString(flightroute.size()-1) + "\n");
+            outPutstream.write("Total Stops: "+ Integer.toString(flightroute.size()-1));
+
+
             outPutstream.close();
         } catch (FileNotFoundException f) {
             System.out.println("PROBLEM OPENING FILE");

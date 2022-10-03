@@ -12,8 +12,8 @@ public class Node {
     /**
      * Instance variables
      */
-    private static String Airport_state;   // current airport IATA code
-    private static Node Airport_parent;  // parent airport IATA code
+    private String Airport_state;   // current airport IATA code
+    private Node Airport_parent;  // parent airport IATA code
 
 
     /**
@@ -35,25 +35,35 @@ public class Node {
     public  String getAirport_state() {
         return Airport_state;
     }
-
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof Node)) return false;
-//        Node node = (Node) o;
-//        return getAirport_state() == node.getAirport_state();
-//    }
-
     public  Node getAirport_parent() {
         return Airport_parent;
     }
 
     @Override
-    public String toString(){
-        String string = "nodeState: " + Airport_state;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Node node)) return false;
+        return getAirport_state().equals(node.getAirport_state());
+    }
+
+
+//    @Override
+//    public String toString(){
+//        String string = "nodeState: " + getAirport_state();
+////        string = string + ", parent: " + Airport_parent;
 //        if(Airport_parent != null){
-//            string = string + ", parent: " + Airport_parent;
+//            string = string + ", parent: " + Airport_parent.getAirport_state();
 //        }
-        return string;
+//        return string;
+//    }
+
+
+    @Override
+    public String toString() {
+        return "Node {" +
+                "Airport_state='" + Airport_state + '\'' +
+                ", Airport_parent=" + Airport_parent +
+                '}';
     }
 
     /**
@@ -76,4 +86,28 @@ public class Node {
 
     }
 
+    public static void main(String[]args) {
+
+        Map AirportsMap = Airport.AirportFileReader("airports.csv");
+        Map RoutesMap = Route.Router.getRoutes("routes.csv");
+
+//        System.out.println(Airport.objectInit("ACC"));
+//        System.out.println(RoutesMap.get("ACC"));
+//        System.out.println(Airport.objectInit("NBO"));
+//        System.out.println(RoutesMap.get("NBO"));
+//        System.out.println(Airport.objectInit("MGQ"));
+//        System.out.println(RoutesMap.get("MGQ"));
+
+//        readWrite.fileReader("accra_to_newyork.txt");
+//        System.out.println(Route.Router.findRoute("ACC", "YWG"));
+//        readWrite.fileReader("sochi_to_kazan.txt");
+        readWrite.fileReader("accra_to_winnipeg.txt");
+
+//        Node node1 = new Node("node1", null);
+//        Node node2 = new Node("node2", node1);
+//        Node node3 = new Node("node3", node2);
+//        Node node4 = new Node("node4", node3);
+//
+//        System.out.println(node4);
+    }
 }

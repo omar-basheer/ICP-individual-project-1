@@ -190,7 +190,8 @@ public class Route{
                         if(!exploredSet.contains(child.getAirport_state()) && !frontier.contains(child)){
                             if(child.getAirport_state().equals(goalState)){
                                 System.out.println("found goal: " + child.getAirport_state());
-//                                readWrite.fileWriter("flight path.txt", child.solutionPath());
+                                System.out.println(child.solutionPath());
+                                readWrite.fileWriter( child.solutionPath());
                                 return child.solutionPath();
                             }
                             frontier.add(child);
@@ -210,7 +211,7 @@ public class Route{
 
 
 //            System.out.println(findRoute("SCL", "LUX"));
-            System.out.println(findRoute("AER", "KZN"));
+//            System.out.println(findRoute("AER", "KZN"));
 //            System.out.println(findRoute("BAH", "BAY"));
 //            System.out.println(findRoute("SCN", "JFK"));
 
